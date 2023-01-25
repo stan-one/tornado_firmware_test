@@ -1,0 +1,17 @@
+#ifndef CONFIG_H
+#define CONFIG_H
+
+//TEMPERATURE
+#define V_SUPPLY 3.3F
+#define ADC_RES 4096U
+#define MAX_VOLT 3.3F
+#define BETA_TERMISTOR 3380U
+#define RES_AT_25C 10000U
+#define R1 10000U
+//FANS
+#define CLOCK_SPEED 480000U
+#define NUM_FANS 5U
+
+#define IMPOSSIBLE_VALUE 9999U
+
+#endif
