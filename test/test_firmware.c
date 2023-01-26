@@ -76,14 +76,20 @@ void test_fan_speed_calculator(){
 
 }
 
+void test_process_ui(){
+	char buffer[] = "$80;76;56;44;1;1;1;20000#";
+	data_in_t formated_in;
+	process_buffer_command(buffer+1, &formated_in);
+	TEST_ASSERT_EQUAL_UINT32(80, formated_in.pwm_f0);
+	TEST_ASSERT_EQUAL_UINT32(76, formated_in.pwm_f1);
+
+}
+
 
 int main(void) {
 	RUN_TEST(test_adc, 1);
 	RUN_TEST(test_pulse_collection, 2);
 	RUN_TEST(test_pulse_colletion_timeout, 3);
 	RUN_TEST(test_fan_speed_calculator, 4);
+	RUN_TEST(test_process_ui, 5);
 }
-
-
-
-

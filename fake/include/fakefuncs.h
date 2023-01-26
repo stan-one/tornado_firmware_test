@@ -13,6 +13,7 @@
 extern bool fake_timeout_flag;
 extern int pulse_order[NUM_FANS*2];
 extern uint16_t fake_pulses[NUM_FANS*2];
+extern char fake_data_buffer[USB_BUFFER_SIZE];
 
 enum fake_pulses_hz{FAKE_60HZ = 800, FAKE_100HZ = 480};
 enum fake_rpm{FAKE_60HZ_RPM = 1800};

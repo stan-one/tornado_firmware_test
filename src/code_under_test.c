@@ -126,3 +126,45 @@ void fan_speed_calculator(uint32_t speeds[], collected_pulses_t  pulses){
         }
 	}
 }
+
+int route_data(char source){
+    switch (source)
+    {
+    case LED_DATA:
+        return LED_DATA_CASE;
+        break;
+    case CONFIG_DATA:
+        return CONFIG_DATA_CASE;
+        break;
+    default:
+        break;
+    }
+}
+
+bool process_buffer_command(char buff[], data_in_t *data_ui){
+    char *token = strtok(buff, SEPARATOR);
+    uint32_t hold_num[30] = {IMPOSSIBLE_VALUE_COUNTER};
+    int i = 0;
+        while (token != NULL){
+            hold_num[i] =  atoi(token);
+            i++;
+            token = strtok(NULL, SEPARATOR);
+        }
+        if(hold_num[9] != IMPOSSIBLE_VALUE_COUNTER){
+            data_ui->pwm_f0 = hold_num[0];
+            data_ui->pwm_f1 = hold_num[1];
+            data_ui->pwm_f2 = hold_num[2];
+            data_ui->pwm_f3 = hold_num[3];
+            data_ui->sw_1 = hold_num[4];
+            data_ui->sw_2 = hold_num[5];
+            data_ui->strip_select = hold_num[6];
+            data_ui->effect_selected_fan = hold_num[7];
+            data_ui->effect_selected_strip = hold_num[8];
+            data_ui->freq_pwm = hold_num[9];
+            return true;
+        }
+        else{
+            return false;
+        }
+
+}
