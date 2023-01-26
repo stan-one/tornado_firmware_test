@@ -22,8 +22,8 @@ typedef struct data_out{
 }data_out_t;
 
 typedef struct pulse{
-	uint16_t p1;
-	uint16_t p2;
+	uint32_t p1;
+	uint32_t p2;
 }collected_pulses_t[NUM_FANS];
 
 enum fans{FAN_0, FAN_1, FAN_2, FAN_3, FAN_4};
@@ -33,6 +33,8 @@ uint32_t convert_raw_to_temp(uint32_t raw_adc);
 
 void read_fan_pulses(collected_pulses_t pulse_set);
 
-uint16_t calcule_fan_speed(collected_pulses_t all_pulses);
+void init_pulses(collected_pulses_t pulses);
+
+void fan_speed_calculator(uint32_t speeds[], collected_pulses_t  pulses);
 
 #endif
