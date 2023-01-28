@@ -21,9 +21,11 @@
 //INPUT PROCESSING
 #define LED_DATA '$'
 #define CONFIG_DATA '@'
+#define SETUP_DATA '&'
 #define USB_BUFFER_SIZE 256
 #define UI_COMMAND_LEN 35
 #define END_CHAR '#'
 #define SEPARATOR ";"
+#define SEPARATOR_LED "|"
 
 #endif

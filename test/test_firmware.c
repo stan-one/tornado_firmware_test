@@ -77,13 +77,33 @@ void test_fan_speed_calculator(){
 }
 
 void test_process_ui(){
-	char buffer[] = "$80;76;56;44;1;1;1;20000#";
+	char buffer[] = "$80;76;56;44;1;1;1;1;20000#";
 	data_in_t formated_in;
-	process_buffer_command(buffer+1, &formated_in);
+	TEST_ASSERT_EQUAL_INT(1, process_buffer_command(buffer+1, &formated_in));
 	TEST_ASSERT_EQUAL_UINT32(80, formated_in.pwm_f0);
 	TEST_ASSERT_EQUAL_UINT32(76, formated_in.pwm_f1);
+	TEST_ASSERT_EQUAL_UINT32(1, formated_in.sw_1);
+	TEST_ASSERT_EQUAL_UINT32(20000, formated_in.freq_pwm);
+}
+
+void test_setup_data(){
+	char buffer[] = "&12;20#";
+	led_setup_t led_setup;
+	TEST_ASSERT_EQUAL_INT(1, process_setup_data(buffer+1, &led_setup));
+	TEST_ASSERT_EQUAL_UINT32(12, led_setup.num_led_fan);
+	TEST_ASSERT_EQUAL_UINT32(20, led_setup.num_led_strip);
 
 }
+
+void test_process_led_data(){
+	char buffer[] = "@16;16;16|24;24;24#";
+	int num_leds = 2;
+	uint32_t effect[30] = {0};
+	process_led_effect_data(buffer+1, effect);
+	TEST_ASSERT_EQUAL_UINT32((16<<16) | (16<<8) |  (16), effect[0]);
+	TEST_ASSERT_EQUAL_UINT32((24<<16) | (24<<8) |  (24), effect[1]);
+}
+
 
 
 int main(void) {
@@ -92,4 +112,6 @@ int main(void) {
 	RUN_TEST(test_pulse_colletion_timeout, 3);
 	RUN_TEST(test_fan_speed_calculator, 4);
 	RUN_TEST(test_process_ui, 5);
+	RUN_TEST(test_setup_data, 6);
+	RUN_TEST(test_process_led_data, 7);
 }

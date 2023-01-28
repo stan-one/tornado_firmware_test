@@ -3,6 +3,9 @@
 //data structure for outputting current state
 data_out_t data_out;
 
+
+uint32_t *led_effect;
+
 extern bool fake_timeout_flag;
 extern uint16_t fake_pulses[NUM_FANS*2];
 //ADC CODE
@@ -143,7 +146,7 @@ int route_data(char source){
 
 bool process_buffer_command(char buff[], data_in_t *data_ui){
     char *token = strtok(buff, SEPARATOR);
-    uint32_t hold_num[30] = {IMPOSSIBLE_VALUE_COUNTER};
+    uint32_t hold_num[30]; memset(hold_num, IMPOSSIBLE_VALUE_COUNTER, 30*sizeof(uint32_t));
     int i = 0;
         while (token != NULL){
             hold_num[i] =  atoi(token);
@@ -157,14 +160,62 @@ bool process_buffer_command(char buff[], data_in_t *data_ui){
             data_ui->pwm_f3 = hold_num[3];
             data_ui->sw_1 = hold_num[4];
             data_ui->sw_2 = hold_num[5];
-            data_ui->strip_select = hold_num[6];
-            data_ui->effect_selected_fan = hold_num[7];
-            data_ui->effect_selected_strip = hold_num[8];
-            data_ui->freq_pwm = hold_num[9];
+            data_ui->effect_selected_fan = hold_num[6];
+            data_ui->effect_selected_strip = hold_num[7];
+            data_ui->freq_pwm = hold_num[8];
             return true;
         }
         else{
             return false;
         }
+}
 
+bool process_setup_data(char buff[], led_setup_t *data_setup){
+    char *token = strtok(buff, SEPARATOR);
+    uint32_t hold_num[30]; memset(hold_num, IMPOSSIBLE_VALUE_COUNTER, 30);
+    int i = 0;
+    while (token != NULL){
+        hold_num[i] =  atoi(token);
+        i++;
+        token = strtok(NULL, SEPARATOR);
+    
+    }
+    if(hold_num[1]!= IMPOSSIBLE_VALUE_COUNTER){
+        data_setup->num_led_fan = hold_num[0];
+        data_setup->num_led_strip = hold_num[1];
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+uint32_t fragment_led(char *led_s){
+    char *state;
+    char *token = strtok_r(led_s,SEPARATOR, &state);
+    uint32_t hold[3];
+    int i = 0;
+    while(token != NULL){
+        hold[i] = atoi(token);
+        i++;
+        token = strtok_r(NULL, SEPARATOR,  &state);
+    }
+    return (uint32_t)( (hold[0]  << 16) | (hold[1] << 8) | (hold[2]));
+    
+}
+
+bool process_led_effect_data(char buff[], uint32_t effect[]){
+    char *state;
+    char *token_led = strtok_r(buff, SEPARATOR_LED, &state);
+    char hold[30] = {0};
+    int i = 0;
+
+    while (token_led != NULL){
+        strcpy(hold, token_led);
+        effect[i] = fragment_led(hold);
+        i++;
+        memset(hold, 0, 30);
+        token_led = strtok_r(NULL, SEPARATOR_LED, &state);
+    }
+    return true;
 }
