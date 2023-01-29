@@ -1,5 +1,4 @@
 #include "../include/code_under_test.h"
-#include <math.h>
 //data structure for outputting current state
 data_out_t data_out;
 
@@ -130,23 +129,9 @@ void fan_speed_calculator(uint32_t speeds[], collected_pulses_t  pulses){
 	}
 }
 
-int route_data(char source){
-    switch (source)
-    {
-    case LED_DATA:
-        return LED_DATA_CASE;
-        break;
-    case CONFIG_DATA:
-        return CONFIG_DATA_CASE;
-        break;
-    default:
-        break;
-    }
-}
-
 bool process_buffer_command(char buff[], data_in_t *data_ui){
     char *token = strtok(buff, SEPARATOR);
-    uint32_t hold_num[30]; memset(hold_num, IMPOSSIBLE_VALUE_COUNTER, 30*sizeof(uint32_t));
+    uint32_t hold_num[TEST_SIZE]; memset(hold_num, IMPOSSIBLE_VALUE_COUNTER, TEST_SIZE*sizeof(uint32_t));
     int i = 0;
         while (token != NULL){
             hold_num[i] =  atoi(token);
@@ -172,7 +157,7 @@ bool process_buffer_command(char buff[], data_in_t *data_ui){
 
 bool process_setup_data(char buff[], led_setup_t *data_setup){
     char *token = strtok(buff, SEPARATOR);
-    uint32_t hold_num[30]; memset(hold_num, IMPOSSIBLE_VALUE_COUNTER, 30);
+    uint32_t hold_num[TEST_SIZE]; memset(hold_num, IMPOSSIBLE_VALUE_COUNTER, TEST_SIZE);
     int i = 0;
     while (token != NULL){
         hold_num[i] =  atoi(token);
@@ -207,15 +192,31 @@ uint32_t fragment_led(char *led_s){
 bool process_led_effect_data(char buff[], uint32_t effect[]){
     char *state;
     char *token_led = strtok_r(buff, SEPARATOR_LED, &state);
-    char hold[30] = {0};
+    char hold[TEST_SIZE] = {0};
     int i = 0;
 
     while (token_led != NULL){
         strcpy(hold, token_led);
         effect[i] = fragment_led(hold);
         i++;
-        memset(hold, 0, 30);
+        memset(hold, 0, TEST_SIZE);
         token_led = strtok_r(NULL, SEPARATOR_LED, &state);
     }
     return true;
+}
+
+void create_data_pcb(char* msg, data_out_t data){
+ char hold[TEST_SIZE] = {0};
+ sprintf(hold,"%u", data.rpm0);
+ strcat(msg, hold); memset(hold, 0, TEST_SIZE); strcat(msg, ";");
+ sprintf(hold,"%u", data.rpm1);
+ strcat(msg, hold); memset(hold, 0, TEST_SIZE); strcat(msg, ";");
+ sprintf(hold,"%u", data.rpm2);
+ strcat(msg, hold); memset(hold, 0, TEST_SIZE); strcat(msg, ";");
+ sprintf(hold,"%u", data.rpm3);
+ strcat(msg, hold); memset(hold, 0, TEST_SIZE); strcat(msg, ";");
+ sprintf(hold,"%u", data.rpm_pump);
+ strcat(msg, hold); memset(hold, 0, TEST_SIZE); strcat(msg, ";");
+ sprintf(hold,"%u", data.temperature);
+ strcat(msg, hold); memset(hold, 0, TEST_SIZE); strcat(msg, "#");
 }

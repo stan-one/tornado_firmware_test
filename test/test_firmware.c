@@ -97,14 +97,19 @@ void test_setup_data(){
 
 void test_process_led_data(){
 	char buffer[] = "@16;16;16|24;24;24#";
-	int num_leds = 2;
-	uint32_t effect[30] = {0};
+	uint32_t effect[DEFAULT_TEST] = {0};
 	process_led_effect_data(buffer+1, effect);
 	TEST_ASSERT_EQUAL_UINT32((16<<16) | (16<<8) |  (16), effect[0]);
 	TEST_ASSERT_EQUAL_UINT32((24<<16) | (24<<8) |  (24), effect[1]);
 }
 
-
+void test_create_pcb_data(){
+	char buffer[DEFAULT_TEST] = {};
+	char expected[] = "1000;1000;1000;1000;1200;2250#";
+	data_out_t data = {1000,1000,1000,1000,1200,2250};
+	create_data_pcb(buffer, data);
+	TEST_ASSERT_EQUAL_CHAR_ARRAY_MESSAGE(expected, buffer, (uint32_t)strlen(expected), "");
+}
 
 int main(void) {
 	RUN_TEST(test_adc, 1);
@@ -114,4 +119,5 @@ int main(void) {
 	RUN_TEST(test_process_ui, 5);
 	RUN_TEST(test_setup_data, 6);
 	RUN_TEST(test_process_led_data, 7);
+	RUN_TEST(test_create_pcb_data,8);
 }

@@ -6,11 +6,12 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
-
+#include <math.h>
 
 #include "../fake/include/fakefuncs.h"
 #include "config.h"
 
+#define TEST_SIZE 60
 typedef struct data_out{
 	uint32_t rpm0;
 	uint32_t rpm1;
@@ -44,7 +45,6 @@ typedef struct led_setup{
 
 
 enum fans{FAN_0, FAN_1, FAN_2, FAN_3, FAN_4};
-enum input_source{CONFIG_DATA_CASE, LED_DATA_CASE};
 
 
 uint32_t convert_raw_to_temp(uint32_t raw_adc);
@@ -55,8 +55,6 @@ void init_pulses(collected_pulses_t pulses);
 
 void fan_speed_calculator(uint32_t speeds[], collected_pulses_t  pulses);
 
-int route_data(char source);
-
 bool process_buffer_command(char buff[], data_in_t *data_ui);
 
 bool process_setup_data(char buff[], led_setup_t *data_setup);
@@ -64,5 +62,7 @@ bool process_setup_data(char buff[], led_setup_t *data_setup);
 bool process_led_effect_data(char buff[], uint32_t effect[]);
 
 uint32_t fragment_led(char *led_s);
+
+void create_data_pcb(char* msg, data_out_t data);
 
 #endif
