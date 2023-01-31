@@ -77,7 +77,7 @@ void test_fan_speed_calculator(){
 }
 
 void test_process_ui(){
-	char buffer[] = "$80;76;56;44;1;1;1;1;20000#";
+	char buffer[] = "$80;76;56;44;1;1;20000#";
 	data_in_t formated_in;
 	TEST_ASSERT_EQUAL_INT(1, process_buffer_command(buffer+1, &formated_in));
 	TEST_ASSERT_EQUAL_UINT32(80, formated_in.pwm_f0);

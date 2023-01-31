@@ -145,9 +145,7 @@ bool process_buffer_command(char buff[], data_in_t *data_ui){
             data_ui->pwm_f3 = hold_num[3];
             data_ui->sw_1 = hold_num[4];
             data_ui->sw_2 = hold_num[5];
-            data_ui->effect_selected_fan = hold_num[6];
-            data_ui->effect_selected_strip = hold_num[7];
-            data_ui->freq_pwm = hold_num[8];
+            data_ui->freq_pwm = hold_num[6];
             return true;
         }
         else{
